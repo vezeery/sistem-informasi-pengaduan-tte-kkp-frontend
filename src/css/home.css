@@ -41,6 +41,15 @@
     font-weight: 600;
 }
 
+.form-content button a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.form-content button:hover {
+    background-color: #1b82be;
+}
+
 /* FAQ Container CSS */
 
 .faq-container {

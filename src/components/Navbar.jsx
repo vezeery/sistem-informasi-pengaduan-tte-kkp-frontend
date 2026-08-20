@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <a href="/" className="navbar-logo">
+        <a href="../home/index.jsx" className="navbar-logo">
           <img src={NavbarImage} alt="Logo" className="navbar-logo-image" />
           <p>Kementerian Kelautan dan Perikanan</p>
         </a>
