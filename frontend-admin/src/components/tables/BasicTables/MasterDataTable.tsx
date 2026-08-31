@@ -1,4 +1,8 @@
 import { FormEvent, useState } from "react";
+import Form from "../../form/Form";
+import Label from "../../form/Label";
+import Input from "../../form/input/InputField";
+import { Modal } from "../../ui/modal";
 import {
   Table,
   TableBody,
@@ -6,10 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
-import Form from "../../form/Form";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import { Modal } from "../../ui/modal";
 
 interface MasterDataItem {
   id: number;
@@ -20,7 +20,7 @@ type MasterTab = "Unit Kerja" | "Eselon 1" | "Kategori Kendala";
 
 const initialMasterData: Record<MasterTab, MasterDataItem[]> = {
   "Unit Kerja": [
-    { id: 1, nama: "DIREKTORAT PERENCANAAN RUANG PERAIRAN" },
+    { id: 1, nama: "Direktorat Perencanaan Ruang Perairan" },
     { id: 2, nama: "Ditjen Perikanan Tangkap" },
     { id: 3, nama: "Ditjen Perikanan Budidaya" },
     { id: 4, nama: "Ditjen Penguatan Daya Saing Produk KP" },

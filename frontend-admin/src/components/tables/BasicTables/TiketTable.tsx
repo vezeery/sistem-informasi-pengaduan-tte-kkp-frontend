@@ -13,7 +13,6 @@ interface Ticket {
   id: number;
   noTiket: string;
   pelapor: {
-    image: string;
     name: string;
     email: string;
   };
@@ -29,7 +28,6 @@ const tableData: Ticket[] = [
     id: 1,
     noTiket: "#TKT-1001",
     pelapor: {
-      image: "/images/user/user-17.jpg",
       name: "Lindsey Curtis",
       email: "lindsey@kkp.go.id",
     },
@@ -42,7 +40,6 @@ const tableData: Ticket[] = [
     id: 2,
     noTiket: "#TKT-1002",
     pelapor: {
-      image: "/images/user/user-18.jpg",
       name: "Kaiya George",
       email: "kaiya@kkp.go.id",
     },
@@ -55,7 +52,6 @@ const tableData: Ticket[] = [
     id: 3,
     noTiket: "#TKT-1003",
     pelapor: {
-      image: "/images/user/user-20.jpg",
       name: "Zain Geidt",
       email: "zain@kkp.go.id",
     },
@@ -68,7 +64,6 @@ const tableData: Ticket[] = [
     id: 4,
     noTiket: "#TKT-1004",
     pelapor: {
-      image: "/images/user/user-21.jpg",
       name: "Abram Schleifer",
       email: "abram@kkp.go.id",
     },
@@ -136,15 +131,9 @@ export default function TicketTable() {
                 </TableCell>
 
                 {/* Kolom Pelapor (Foto + Nama + Email) */}
-                <TableCell className="px-5 py-4 sm:px-6 text-start">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 overflow-hidden rounded-full">
-                      <img
-                        width={40}
-                        height={40}
-                        src={ticket.pelapor.image}
-                        alt={ticket.pelapor.name}
-                      />
+                <TableCell className="py-4 text-start">
+                  <div className="flex items-center">
+                    <div className="w-5 h-5 overflow-hidden rounded-full">
                     </div>
                     <div>
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
