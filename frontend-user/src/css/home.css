@@ -1,0 +1,253 @@
+/* Main CSS */
+
+.home {
+    background-color: #f5f5f5;
+    width: 100%
+}
+
+.container {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form Container CSS */
+.form-content h2 {
+    margin-top: 45px;
+    margin-bottom: 40px;
+    font-size: 48px;
+    color: #042E7C;
+    font-weight: bold;
+}
+
+.form-content p {
+    font-size: 16px;
+    color: #0f0f0f;
+    font-weight: 600;
+}
+
+.form-content .form-button {
+    background-color: #2093D6;
+    border-radius: 16px;
+    color: #fff;
+    border: none;
+    padding: 20px 40px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 40px;
+    font-weight: 600;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.form-content .form-button {
+    text-decoration: none;
+    color: #fff;
+}
+
+.form-content .form-button:hover {
+    background-color: #1b82be;
+}
+
+/* FAQ Container CSS */
+
+.faq-container {
+    background-color: #113C64;
+    padding: 60px 40px;
+    margin-top: 48px;
+    font-family: sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.faq-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.faq-content h2 {
+    color: #fff;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.faq-search-box {
+    margin-bottom: 32px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.faq-search-input {
+    background-color: #fff;
+    width: 45%;
+    max-width: 500px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #0f0f0f;
+}
+
+.faq-search-btn {
+    background-color: #2093D6;
+    color: #fff;
+    font-weight: bold;
+    width: 10%;
+    min-width: 90px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-left: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.faq-search-btn:hover {
+    background-color: #1b82be;
+}
+
+.faq-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.faq-item {
+    background-color: #fff;
+    margin: 10px 0;
+    width: 56%;
+    max-width: 700px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+.faq-question {
+    width: 100%; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 20px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #113C64;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.faq-question:hover {
+    background-color: #f9f9f9;
+    color: #2093D6;
+}
+
+.faq-icon {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2093D6;
+    margin-left: 16px;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 24px;
+}
+
+.faq-answer p {
+    margin: 0;
+    padding-bottom: 20px;
+    color: #555;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.faq-answer.show {
+    max-height: 200px;
+    transition: max-height 0.3s ease-in;
+}
+
+/* Navigation Bar CSS */
+.navbar {
+    background-color: #fff;
+    padding: 10px 24px;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #004B87;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo p {
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    
+}
+
+.navbar-logo-image {
+    width: auto;
+    height: 45px;
+    object-fit: contain;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu li {
+    margin-left: 24px;
+}
+
+.navbar-menu a {
+    text-decoration: none;
+    color: #004B87;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: sans-serif;
+    transition: color 0.2s ease;
+}
+
+.navbar-menu a:hover {
+    color: #002D54;
+}
