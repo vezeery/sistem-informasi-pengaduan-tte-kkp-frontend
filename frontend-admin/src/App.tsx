@@ -3,8 +3,6 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import AppLayout from "./layout/AppLayout";
 import Agent from "./pages/AkunAgent/Agent";
 import SignIn from "./pages/AuthPages/SignIn";
-import BarChart from "./pages/Charts/BarChart";
-import LineChart from "./pages/Charts/LineChart";
 import Home from "./pages/Dashboard/Home";
 import FormElements from "./pages/Forms/FormElements";
 import MasterData from "./pages/MasterData/MasterData";
@@ -44,9 +42,6 @@ export default function App() {
             <Route path="/images" element={<Images />} />
             <Route path="/videos" element={<Videos />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
           </Route>
 
           {/* Auth Layout */}

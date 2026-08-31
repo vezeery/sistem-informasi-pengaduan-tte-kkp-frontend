@@ -254,11 +254,11 @@ useEffect(() => {
                 height={30}
               />
               <img
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                className="hidden dark:block bg-white p-3 rounded-2xl"
+                src="/images/logo/logo.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={120}
+                height={30}
               />
               {/* Tambahan Teks di bawah logo */}
               <div className="mt-2">
@@ -272,10 +272,11 @@ useEffect(() => {
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              className="bg-white rounded-3xl p-1"
+              src="/images/logo/kkp.svg"
               alt="Logo"
-              width={32}
-              height={32}
+              width={56}
+              height={56}
             />
           )}
         </Link>
