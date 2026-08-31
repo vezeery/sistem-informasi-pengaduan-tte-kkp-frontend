@@ -4,7 +4,6 @@ import AppLayout from "./layout/AppLayout";
 import Agent from "./pages/AkunAgent/Agent";
 import SignIn from "./pages/AuthPages/SignIn";
 import Home from "./pages/Dashboard/Home";
-import FormElements from "./pages/Forms/FormElements";
 import MasterData from "./pages/MasterData/MasterData";
 import NotFound from "./pages/OtherPage/NotFound";
 import Tiket from "./pages/Tiket/Tiket";
@@ -30,9 +29,6 @@ export default function App() {
             <Route path="/akun-agent" element={<Agent />} />
 
             <Route path="/tiket" element={<Tiket />} />
-
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />

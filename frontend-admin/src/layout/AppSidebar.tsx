@@ -7,9 +7,9 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
   PageIcon,
-  TiketIcon
+  TiketIcon,
+  UserIcon,
 } from "../icons";
 
 type NavItem = {
@@ -37,13 +37,8 @@ const navItems: NavItem[] = [
   },
   {
     name: "Akun Agent",
-    icon: <PageIcon />,
+    icon: <UserIcon />,
     path: "/akun-agent",
-  },
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    path: "/form-elements",
   },
 ];
 
