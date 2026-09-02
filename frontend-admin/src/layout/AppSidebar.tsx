@@ -61,7 +61,7 @@ const AppSidebar: React.FC = () => {
     [location.pathname]
   );
 
-useEffect(() => {
+  useEffect(() => {
     let submenuMatched = false;
 
     navItems.forEach((nav, index) => {
@@ -116,8 +116,8 @@ useEffect(() => {
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-active"
-                  : "menu-item-inactive"
+                ? "menu-item-active"
+                : "menu-item-inactive"
                 } cursor-pointer ${!isExpanded && !isHovered
                   ? "lg:justify-center"
                   : "lg:justify-start"
@@ -125,8 +125,8 @@ useEffect(() => {
             >
               <span
                 className={`menu-item-icon-size  ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
+                  ? "menu-item-icon-active"
+                  : "menu-item-icon-inactive"
                   }`}
               >
                 {nav.icon}
@@ -137,9 +137,9 @@ useEffect(() => {
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
                   className={`ml-auto w-5 h-5 transition-transform duration-200 ${openSubmenu?.type === menuType &&
-                      openSubmenu?.index === index
-                      ? "rotate-180 text-brand-500"
-                      : ""
+                    openSubmenu?.index === index
+                    ? "rotate-180 text-brand-500"
+                    : ""
                     }`}
                 />
               )}
@@ -153,8 +153,8 @@ useEffect(() => {
               >
                 <span
                   className={`menu-item-icon-size ${isActive(nav.path)
-                      ? "menu-item-icon-active"
-                      : "menu-item-icon-inactive"
+                    ? "menu-item-icon-active"
+                    : "menu-item-icon-inactive"
                     }`}
                 >
                   {nav.icon}
@@ -184,8 +184,8 @@ useEffect(() => {
                     <Link
                       to={subItem.path}
                       className={`menu-dropdown-item ${isActive(subItem.path)
-                          ? "menu-dropdown-item-active"
-                          : "menu-dropdown-item-inactive"
+                        ? "menu-dropdown-item-active"
+                        : "menu-dropdown-item-inactive"
                         }`}
                     >
                       {subItem.name}
@@ -193,8 +193,8 @@ useEffect(() => {
                         {subItem.new && (
                           <span
                             className={`ml-auto ${isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
+                              ? "menu-dropdown-badge-active"
+                              : "menu-dropdown-badge-inactive"
                               } menu-dropdown-badge`}
                           >
                             new
@@ -203,8 +203,8 @@ useEffect(() => {
                         {subItem.pro && (
                           <span
                             className={`ml-auto ${isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
+                              ? "menu-dropdown-badge-active"
+                              : "menu-dropdown-badge-inactive"
                               } menu-dropdown-badge`}
                           >
                             pro
@@ -222,6 +222,25 @@ useEffect(() => {
     </ul>
   );
 
+  const [userInfo, setUserInfo] = useState({ name: "", email: "" });
+
+  // 2. Ambil data dari localStorage saat komponen pertama kali dimuat
+  useEffect(() => {
+    const storedAgent = localStorage.getItem("agent_info");
+    if (storedAgent) {
+      try {
+        const parsedAgent = JSON.parse(storedAgent);
+        setUserInfo({
+          // Sesuaikan 'nama' atau 'name' tergantung dari respons backend Anda
+          name: parsedAgent.nama || parsedAgent.name || "Admin KKP",
+          email: parsedAgent.email || "admin@kkp.go.id"
+        });
+      } catch (error) {
+        console.error("Gagal membaca data sesi", error);
+      }
+    }
+  }, []);
+
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-[#113E65] dark:bg-gray-900 dark:border-gray-800 text-white h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
@@ -236,7 +255,6 @@ useEffect(() => {
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Wrapper diubah menjadi flex-col dan items-center agar selalu ke tengah */}
       <div className="py-6 flex flex-col items-center text-center">
         <Link to="/" className="flex flex-col items-center">
           {isExpanded || isHovered || isMobileOpen ? (
@@ -283,8 +301,8 @@ useEffect(() => {
             <div>
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
+                  ? "lg:justify-center"
+                  : "justify-start"
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
@@ -297,6 +315,14 @@ useEffect(() => {
             </div>
           </div>
         </nav>
+      </div>
+      <div className={`mt-auto border-t border-[#1e507b] p-4 ${!isExpanded && !isHovered && !isMobileOpen ? 'hidden' : 'block'}`}>
+        <span className="block font-medium text-white text-theme-sm dark:text-gray-400 truncate">
+          {userInfo.name}
+        </span>
+        <span className="mt-0.5 block text-theme-xs text-blue-200 dark:text-gray-400 truncate">
+          {userInfo.email}
+        </span>
       </div>
     </aside>
   );

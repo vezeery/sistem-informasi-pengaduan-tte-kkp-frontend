@@ -1,3 +1,4 @@
+import api from "../../../lib/api";
 import Form from "../../form/Form";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
@@ -10,104 +11,132 @@ import {
     TableRow,
 } from "../../ui/table";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-// 1. Interface untuk data Agent
-interface Agent {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-    tickets: number;
-    status: "Aktif" | "Nonaktif";
-    avatarColor: string;
+interface UnitKerja {
+    id: string | number;
+    nama?: string;
+    name?: string;
 }
 
-// 2. Dummy Data (Berdasarkan referensi gambar)
-const agentData: Agent[] = [
-    {
-        id: 1,
-        name: "Budi Santoso",
-        email: "budi.s@kkp.go.id",
-        role: "Admin",
-        tickets: 24,
-        status: "Aktif",
-        avatarColor: "bg-[#1e3a5f]", // Dark blue
-    },
-    {
-        id: 2,
-        name: "Siti Rahayu",
-        email: "siti.r@kkp.go.id",
-        role: "Agent",
-        tickets: 18,
-        status: "Aktif",
-        avatarColor: "bg-[#0d7b8a]", // Teal
-    },
-    {
-        id: 3,
-        name: "Hendra Wijaya",
-        email: "hendra.w@kkp.go.id",
-        role: "Agent",
-        tickets: 11,
-        status: "Aktif",
-        avatarColor: "bg-[#0d7b8a]", // Teal
-    },
-    {
-        id: 4,
-        name: "Yuliani Pratiwi",
-        email: "yuliani.p@kkp.go.id",
-        role: "Agent",
-        tickets: 7,
-        status: "Nonaktif",
-        avatarColor: "bg-[#94a3b8]", // Gray (karena nonaktif)
-    },
-    {
-        id: 5,
-        name: "Eko Prasetyo",
-        email: "eko.p@kkp.go.id",
-        role: "Agent",
-        tickets: 15,
-        status: "Aktif",
-        avatarColor: "bg-[#0d7b8a]", // Teal
-    },
-];
+const normalizeUnitKerjaList = (payload: unknown): UnitKerja[] => {
+    if (!Array.isArray(payload)) return [];
 
+    return payload.filter(
+        (unit): unit is UnitKerja =>
+            Boolean(unit) &&
+            typeof unit === "object" &&
+            "id" in unit &&
+            (typeof (unit as UnitKerja).nama === "string" ||
+                typeof (unit as UnitKerja).name === "string"),
+    );
+};
+
+const getAgentUnitId = (agent: Record<string, unknown>) => {
+    const unit = agent.unitKerja || agent.unit;
+    const nestedUnitId =
+        unit && typeof unit === "object" && "id" in unit ? unit.id : "";
+
+    return String(
+        agent.unitId ??
+        agent.unit_id ??
+        nestedUnitId ??
+        "",
+    );
+};
+
+const isAgentActive = (agent: Record<string, unknown> | any) => {
+    const activeValue = agent?.active;
+    return activeValue === true || activeValue === 1 || String(activeValue).trim() === "1";
+};
 
 export default function AgentTable() {
+    const [agents, setAgents] = useState<any[]>([]);
+    const [unitKerjaList, setUnitKerjaList] = useState<UnitKerja[]>([]);
+    const [error, setError] = useState("");
+
     // Hitung jumlah agent aktif untuk header
-    const activeCount = agentData.filter((a) => a.status === "Aktif").length;
+    const activeCount = agents.filter((agent) => isAgentActive(agent)).length;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newEmail, setNewEmail] = useState("");
-    const [editingItemId, setEditingItemId] = useState<number | null>(null);
-
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("AGENT");
+    const [unitId, setUnitId] = useState("");
+    const [editingItemId, setEditingItemId] = useState<string | null>(null);
     const isEditMode = editingItemId !== null;
+
+    const loadAgents = () => {
+        api.get("/api/admin/agents").then((r) => setAgents(r.data)).catch((e) => setError(e.response?.data?.error || "Gagal memuat data petugas"));
+    };
+
+    useEffect(() => {
+        loadAgents();
+        api.get("/api/admin/unit-kerja")
+            .then((r) => setUnitKerjaList(normalizeUnitKerjaList(r.data)))
+            .catch((e) => setError(e.response?.data?.error || "Gagal memuat data unit kerja"));
+    }, []);
+
+    const resetForm = () => { setName(""); setEmail(""); setPassword(""); setRole("AGENT"); setUnitId(""); setEditingItemId(null); setIsModalOpen(false); };
 
     const handleOpenAddModal = () => {
         setEditingItemId(null);
-        setNewName("");
-        setNewEmail("");
+        setName("");
+        setEmail("");
+        setPassword("");
+        setRole("AGENT");
+        setUnitId("");
         setIsModalOpen(true);
     };
 
-    const handleOpenEditModal = (item: Agent) => {
+    const handleOpenEditModal = (item: any) => {
         setEditingItemId(item.id);
-        setNewName(item.name);
-        setNewEmail(item.email)
+        setName(item.name);
+        setEmail(item.email);
+        setRole(item.role);
+        setUnitId(getAgentUnitId(item));
+        setPassword("");
         setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setEditingItemId(null);
-        setNewName("");
-        setNewEmail("");
+        setName("");
+        setEmail("");
+        setPassword("");
+        setRole("AGENT");
+        setUnitId("");
     };
 
-    const handleSubmit = () => {
+    const handleToggle = async (id: string) => {
+        try {
+            await api.patch(`/api/admin/agents/${id}/toggle`);
+            loadAgents();
+        } catch (e: any) {
+            setError(e.response?.data?.error || "Gagal memperbarui status.");
+        }
+    };
 
-    }
+    const handleSave = async () => {
+        try {
+            const body: any = { name, email, role, unitId: unitId || null };
+            if (password) body.password = password;
+
+            if (editingItemId) {
+                await api.put(`/api/admin/agents/${editingItemId}`, body);
+            } else {
+                if (!password) { setError("Kata sandi wajib diisi untuk akun petugas baru."); return; }
+                await api.post("/api/admin/agents", body);
+            }
+            resetForm();
+            loadAgents();
+        } catch (e: any) {
+            setError(e.response?.data?.error || "Gagal menyimpan akun.");
+        }
+    };
+
     return (
         <>
             <div className="p-2 sm:p-6 w-full">
@@ -156,9 +185,9 @@ export default function AgentTable() {
                             </TableHeader>
 
                             <TableBody className="divide-y divide-gray-100">
-                                {agentData.map((agent) => {
-                                    // Menentukan class teks jika status Nonaktif (teks menjadi abu-abu pudar)
-                                    const isInactive = agent.status === "Nonaktif";
+                                {agents.map((agent) => {
+                                    const isActive = isAgentActive(agent);
+                                    const isInactive = !isActive;
                                     const textClass = isInactive ? "text-gray-400" : "text-gray-700";
 
                                     return (
@@ -167,7 +196,7 @@ export default function AgentTable() {
                                             {/* Nama & Avatar Inisial */}
                                             <TableCell className="px-6 py-4 text-sm text-start">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-medium ${agent.avatarColor}`}>
+                                                    <div className={`flex items-center justify-center w-8 h-8 rounded-full text-blue text-xs font-medium ${agent.avatarColor}`}>
                                                         {agent.name.charAt(0)}
                                                     </div>
                                                     <span className={`font-medium ${textClass}`}>
@@ -197,11 +226,11 @@ export default function AgentTable() {
 
                                             {/* Status Badge */}
                                             <TableCell className="px-6 py-4 text-start">
-                                                <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${agent.status === "Aktif"
+                                                <span                                                 className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${isActive
                                                     ? "bg-[#dcfce7]/60 text-[#166534]"
                                                     : "bg-gray-100 text-gray-400"
                                                     }`}>
-                                                    {agent.status}
+                                                    {isActive ? "Aktif" : "Nonaktif"}
                                                 </span>
                                             </TableCell>
 
@@ -210,7 +239,7 @@ export default function AgentTable() {
                                                 <div className="flex items-center justify-start gap-2">
                                                     {/* Tombol Edit */}
                                                     <button
-                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${isInactive ? 'bg-gray-50 text-gray-400' : 'bg-[#e0f2fe]/60 text-[#0284c7] hover:bg-[#e0f2fe]'}`}
+                                                        className="inline-flex items-center gap-1.5 rounded-md bg-[#e0f2fe]/60 px-3 py-1.5 text-xs font-medium text-[#0284c7] transition-colors hover:bg-[#e0f2fe]"
                                                         onClick={() => handleOpenEditModal(agent)}
                                                     >
                                                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -220,15 +249,29 @@ export default function AgentTable() {
                                                     </button>
 
                                                     {/* Tombol Toggle Status (Aktifkan / Nonaktifkan) */}
-                                                    {agent.status === "Aktif" ? (
-                                                        <button className="px-3 py-1.5 bg-[#ffedd5]/60 text-[#c2410c] hover:bg-[#ffedd5] rounded-md text-xs font-medium transition-colors">
-                                                            Nonaktifkan
-                                                        </button>
-                                                    ) : (
-                                                        <button className="px-3 py-1.5 bg-[#dcfce7]/60 text-[#166534] hover:bg-[#dcfce7] rounded-md text-xs font-medium transition-colors">
-                                                            Aktifkan
-                                                        </button>
-                                                    )}
+                                                    <button
+                                                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${isActive
+                                                            ? "bg-[#fef3c7]/60 text-[#b45309] hover:bg-[#fef3c7]"
+                                                            : "bg-green-50 text-green-500 hover:bg-green-200"
+                                                            }`}
+                                                        onClick={() => handleToggle(agent.id)}
+                                                    >
+                                                        {isActive ? (
+                                                            <>
+                                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                </svg>
+                                                                Nonaktifkan
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                                </svg>
+                                                                Aktifkan
+                                                            </>
+                                                        )}
+                                                    </button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -252,7 +295,7 @@ export default function AgentTable() {
                         <h3 className="mt-2 text-2xl font-bold text-gray-900"></h3>
                     </div>
 
-                    <Form onSubmit={handleSubmit} className="space-y-6">
+                    <Form onSubmit={handleSave} className="space-y-6">
                         <div>
                             <Label htmlFor="nama_agent" className="text-gray-700">
                                 Nama
@@ -260,8 +303,8 @@ export default function AgentTable() {
                             <Input
                                 id="nama_agent"
                                 name="nama"
-                                value={newName}
-                                onChange={(event) => setNewName(event.target.value)}
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
                                 placeholder="Masukkan nama"
                                 className="bg-white"
                                 required
@@ -275,13 +318,68 @@ export default function AgentTable() {
                             <Input
                                 id="email_kkp"
                                 name="email_kkp"
-                                value={newEmail}
-                                onChange={(event) => setNewEmail(event.target.value)}
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
                                 placeholder="Masukkan email kkp"
                                 className="bg-white"
                                 required
                             />
                         </div>
+                        <div>
+                            <Label htmlFor="password" className="text-gray-700">
+                                Kata Sandi
+                            </Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                value={password}
+                                onChange={(event) => setPassword(event.target.value)}
+                                placeholder={isEditMode ? "Kosongkan jika tidak ingin mengubah kata sandi" : "Masukkan kata sandi"}
+                                className="bg-white"
+                                required={!isEditMode} // Wajib diisi saat menambah akun baru, tapi tidak wajib saat edit
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="role" className="text-gray-700">
+                                Role
+                            </Label>
+                            <select
+                                id="role"
+                                name="role"
+                                value={role}
+                                onChange={(event) => setRole(event.target.value)}
+                                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-[#1A3A5E] focus:ring focus:ring-[#1A3A5E]/50"
+                                required
+                            >
+                                <option value="AGENT">Agent</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                        </div>
+                        <div>
+                            <Label htmlFor="unit_kerja" className="text-gray-700">
+                                Unit Kerja
+                            </Label>
+                            <select
+                                id="unit_kerja"
+                                name="unit_kerja"
+                                value={unitId}
+                                onChange={(event) => setUnitId(event.target.value)}
+                                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-[#1A3A5E] focus:ring focus:ring-[#1A3A5E]/50"
+                                required
+                            >
+                                <option value="">Pilih Unit Kerja</option>
+                                {unitKerjaList.map((unit) => (
+                                    <option key={String(unit.id)} value={String(unit.id)}>
+                                        {unit.nama || unit.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {error && (
+                            <div className="text-sm text-center text-error-500">{error}</div>
+                        )}
 
                         <div className="flex justify-end gap-3 pt-2">
                             <button
