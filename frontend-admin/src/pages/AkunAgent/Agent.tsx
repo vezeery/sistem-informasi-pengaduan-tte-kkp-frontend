@@ -7,8 +7,8 @@ export default function AkunAgent() {
   return (
     <>
       <PageMeta
-        title="Akun Agent"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Akun Agent | Admin Helpdesk KKP"
+        description="Halaman akun agent admin helpdesk Kementerian Kelautan dan Perikanan"
       />
       <PageBreadcrumb pageTitle="Agent" />
       <div className="space-y-6">

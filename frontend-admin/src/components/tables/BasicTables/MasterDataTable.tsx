@@ -22,15 +22,15 @@ import {
     eselon1?: { nama?: string };
   }
 
-  type MasterTab = "Unit Kerja" | "Eselon 1" | "Kategori Kendala";
+  type MasterTab = "Eselon 1" | "Unit Kerja" | "Kategori Kendala";
 
   const initialMasterData: Record<MasterTab, MasterDataItem[]> = {
-    "Unit Kerja": [],
     "Eselon 1": [],
+    "Unit Kerja": [],
     "Kategori Kendala": [],
   };
 
-  const tabs: MasterTab[] = ["Unit Kerja", "Eselon 1", "Kategori Kendala"];
+  const tabs: MasterTab[] = ["Eselon 1", "Unit Kerja", "Kategori Kendala"];
 
   const endpointByTab = (tab: MasterTab) => {
     switch (tab) {
@@ -150,7 +150,7 @@ import {
   }
 
   export default function MasterData() {
-    const [activeTab, setActiveTab] = useState<MasterTab>("Unit Kerja");
+    const [activeTab, setActiveTab] = useState<MasterTab>("Eselon 1");
     const [masterData, setMasterData] = useState<Record<MasterTab, MasterDataItem[]>>(
       initialMasterData,
     );
